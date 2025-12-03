@@ -49,6 +49,12 @@ for key in GOOGLE_API_KEYS:
 # Global counter to alternate API keys
 current_api_key_index = 0
 exhausted_keys = set()  # Track exhausted keys
+
+# Pre-mark key #3 as exhausted (from check_api_keys.py results)
+if len(GOOGLE_API_KEYS) > 2:
+    exhausted_keys.add(GOOGLE_API_KEYS[2])
+    print(f"⚠️ Pre-marking key #3 as exhausted: {GOOGLE_API_KEYS[2][:10]}...")
+
 genai.configure(api_key=GOOGLE_API_KEYS[0])
 
 def get_llm_instance(api_key):
@@ -57,7 +63,7 @@ def get_llm_instance(api_key):
         google_api_key=api_key,
         temperature=0.3,
         max_tokens=2000,
-        max_retries=1,  # Reduce retries to fail faster
+        max_retries=0,  # Disable LangChain retries, we handle it ourselves
     )
 
 # Global llm instance (initialize with first key)
